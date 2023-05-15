@@ -59,14 +59,14 @@ async fn handle_pvf_check(rpc_url: String) -> anyhow::Result<()> {
     let _ = std::fs::create_dir_all(&pvfs_path);
 
     print!("Fetching PVFs...");
-    let pvfs = subxt::fetch_all_pvfs(
-        rpc_url,
-    ).await?;
+    let pvfs = subxt::fetch_all_pvfs(rpc_url).await?;
     println!(" SUCCESS ({} PVFs)", pvfs.len());
+
+    let validation_host = pvf::setup_pvf_worker(pvfs_path).await;
 
     for (para_id, pvf) in pvfs {
         print!("Pre-checking 0x{}:", hex::encode(&para_id));
-        let duration = pvf::precheck_pvf(pvfs_path.clone(), pvf).await?;
+        let duration = pvf::precheck_pvf(validation_host.clone(), pvf).await?;
         println!(" SUCCESS ({}ms)", duration.as_millis());
     }
 
@@ -78,15 +78,13 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.commands {
-        Commands::PvfCheck {
-            rpc_url,
-        } => {
+        Commands::PvfCheck { rpc_url } => {
             rt.block_on(handle_pvf_check(rpc_url))?;
         }
         Commands::PvfPrepareWorker(params) => {
             polkadot_node_core_pvf_worker::prepare_worker_entrypoint(
                 &params.socket_path,
-                Some(&params.node_impl_version)
+                Some(&params.node_impl_version),
             );
         }
         Commands::PvfExecuteWorker(_params) => {

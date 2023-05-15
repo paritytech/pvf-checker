@@ -13,8 +13,8 @@ tokio = { version = "1", features = ["full", "rt-multi-thread"] }
 
 parity-scale-codec = "3.1.5"
 
-polkadot-node-core-pvf = { git = "https://github.com/paritytech/polkadot" }
-polkadot-node-core-pvf-worker = { git = "https://github.com/paritytech/polkadot" }
-polkadot-parachain = { git = "https://github.com/paritytech/polkadot" }
+polkadot-node-core-pvf = { git = "https://github.com/paritytech/polkadot", branch = "master" }
+polkadot-node-core-pvf-worker = { git = "https://github.com/paritytech/polkadot", branch = "master" }
+polkadot-parachain = { git = "https://github.com/paritytech/polkadot", branch = "master" }
 
-sp-maybe-compressed-blob = { git = "https://github.com/paritytech/substrate" }
+sp-maybe-compressed-blob = { git = "https://github.com/paritytech/substrate", branch = "master" }
