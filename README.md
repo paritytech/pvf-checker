@@ -17,6 +17,6 @@ Suggested usage (hypothetical):
 ```bash
 for version in '0.9.41 0.9.42 0.9.43-rc1'; do
     cargo install pvf-checker --version $version
-    pvf-checker pvf-check --rpc-url 'wss://kusama-rpc.polkadot.io:443'
+    pvf-checker pvf-check --rpc-url 'wss://kusama-rpc.polkadot.io:443' --skip 2268
 done
 ```

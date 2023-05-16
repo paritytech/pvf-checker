@@ -1,13 +1,9 @@
+use anyhow::anyhow;
 use futures::channel::oneshot;
 use polkadot_node_core_pvf::{Config, PvfPrepData, ValidationHost};
+use polkadot_parachain::primitives::ValidationCode;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
-
-use polkadot_parachain::primitives::ValidationCode;
-
-fn other_io_error(s: String) -> std::io::Error {
-    std::io::Error::new(std::io::ErrorKind::Other, s)
-}
 
 pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> ValidationHost {
     let program_path = std::env::current_exe().expect("current_exe failed?");
@@ -48,9 +44,9 @@ pub async fn precheck_pvf(
     validation_host
         .precheck_pvf(pvf.clone(), tx)
         .await
-        .map_err(other_io_error)?;
+        .map_err(|e| anyhow!(e))?;
 
-    rx.await?.map_err(|e| other_io_error(format!("{e:?}")))?;
+    rx.await?.map_err(|e| anyhow!("{:?}", e))?;
 
     Ok(now.elapsed())
 }

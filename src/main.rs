@@ -28,6 +28,10 @@ enum Commands {
         /// `wss://kusama-rpc.polkadot.io:443` or `http://localhost:9933/`
         #[clap(long)]
         rpc_url: String,
+
+        /// A list of `ParaId`s to skip pre-checking for.
+        #[clap(long)]
+        skip: Vec<u32>,
     },
 
     // These are needed for pvf workers:
@@ -51,21 +55,25 @@ pub struct ValidationWorkerCommand {
     pub node_impl_version: String,
 }
 
-async fn handle_pvf_check(rpc_url: String) -> anyhow::Result<()> {
+async fn handle_pvf_check(rpc_url: String, skip: Vec<u32>) -> anyhow::Result<()> {
     let artifacts = PathBuf::from(".artifacts");
     let _ = std::fs::create_dir_all(artifacts.as_path());
 
     let pvfs_path = artifacts.as_path().join("pvfs");
     let _ = std::fs::create_dir_all(&pvfs_path);
 
-    print!("Fetching PVFs...");
-    let pvfs = subxt::fetch_all_pvfs(rpc_url).await?;
+    print!("Fetching parachain PVFs...");
+    let pvfs = subxt::fetch_parachain_pvfs(rpc_url).await?;
     println!(" SUCCESS ({} PVFs)", pvfs.len());
 
     let validation_host = pvf::setup_pvf_worker(pvfs_path).await;
 
     for (para_id, pvf) in pvfs {
-        print!("Pre-checking 0x{}:", hex::encode(&para_id));
+        if skip.binary_search(&u32::from(para_id)).is_ok() {
+            println!("Skipping {:?}:", &para_id);
+            continue;
+        }
+        print!("Pre-checking {:?}:", &para_id);
         let duration = pvf::precheck_pvf(validation_host.clone(), pvf).await?;
         println!(" SUCCESS ({}ms)", duration.as_millis());
     }
@@ -78,8 +86,9 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.commands {
-        Commands::PvfCheck { rpc_url } => {
-            rt.block_on(handle_pvf_check(rpc_url))?;
+        Commands::PvfCheck { rpc_url, mut skip } => {
+            skip.sort();
+            rt.block_on(handle_pvf_check(rpc_url, skip))?;
         }
         Commands::PvfPrepareWorker(params) => {
             polkadot_node_core_pvf_worker::prepare_worker_entrypoint(
