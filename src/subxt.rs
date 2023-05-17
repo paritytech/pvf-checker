@@ -1,4 +1,4 @@
-use ::subxt::{OnlineClient, PolkadotConfig};
+use ::subxt::{utils::H256, OnlineClient, PolkadotConfig};
 use anyhow::anyhow;
 use polkadot_parachain::primitives::{Id as ParaId, ValidationCode};
 
@@ -7,9 +7,14 @@ pub mod polkadot {}
 
 pub async fn fetch_parachain_pvfs(
     rpc_url: String,
+    at_block: Option<H256>,
 ) -> anyhow::Result<Vec<(ParaId, ValidationCode)>> {
     let api = OnlineClient::<PolkadotConfig>::from_url(rpc_url).await?;
-    let storage = api.storage().at_latest().await?;
+    let storage = if let Some(block_hash) = at_block {
+        api.storage().at(block_hash)
+    } else {
+        api.storage().at_latest().await?
+    };
 
     let paraids_query = polkadot::storage().paras().parachains();
     let paraids = storage.fetch(&paraids_query).await?;

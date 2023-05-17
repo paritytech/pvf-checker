@@ -8,6 +8,12 @@ See https://github.com/paritytech/polkadot/issues/7048 for more details.
 
 This tool uses [`subxt`](https://github.com/paritytech/subxt) to connect to an RPC node specified by the `--rpc-url` flag and query relevant runtime storage items from the relay chain including PVF for each parachain. Once it collected all PVFs, it will spawn a PVF worker and run the check for each PVF.
 
+### Example
+
+```bash
+cargo run --release -- pvf-check --rpc-url 'wss://kusama-rpc.polkadot.io:443' --skip 2268 --at-block 0x9bdc8043c83217b5646d2db9ad17a7fc919e8d5b788b11c555f8099be7baedf2
+```
+
 ### Versioning
 
 This tool will be published on crates.io following the same versioning scheme as polkadot.

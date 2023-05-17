@@ -1,3 +1,4 @@
+use ::subxt::utils::H256;
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -32,6 +33,11 @@ enum Commands {
         /// A list of `ParaId`s to skip pre-checking for.
         #[clap(long)]
         skip: Vec<u32>,
+
+        /// An optional block hash to query runtime info at.
+        /// If `None`, the latest block will be used.
+        #[clap(long)]
+        at_block: Option<H256>,
     },
 
     // These are needed for pvf workers:
@@ -55,7 +61,11 @@ pub struct ValidationWorkerCommand {
     pub node_impl_version: String,
 }
 
-async fn handle_pvf_check(rpc_url: String, skip: Vec<u32>) -> anyhow::Result<()> {
+async fn handle_pvf_check(
+    rpc_url: String,
+    skip: Vec<u32>,
+    at_block: Option<H256>,
+) -> anyhow::Result<()> {
     let artifacts = PathBuf::from(".artifacts");
     let _ = std::fs::create_dir_all(artifacts.as_path());
 
@@ -63,7 +73,7 @@ async fn handle_pvf_check(rpc_url: String, skip: Vec<u32>) -> anyhow::Result<()>
     let _ = std::fs::create_dir_all(&pvfs_path);
 
     print!("Fetching parachain PVFs...");
-    let pvfs = subxt::fetch_parachain_pvfs(rpc_url).await?;
+    let pvfs = subxt::fetch_parachain_pvfs(rpc_url, at_block).await?;
     println!(" SUCCESS ({} PVFs)", pvfs.len());
 
     let validation_host = pvf::setup_pvf_worker(pvfs_path).await;
@@ -86,9 +96,13 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.commands {
-        Commands::PvfCheck { rpc_url, mut skip } => {
+        Commands::PvfCheck {
+            rpc_url,
+            mut skip,
+            at_block,
+        } => {
             skip.sort();
-            rt.block_on(handle_pvf_check(rpc_url, skip))?;
+            rt.block_on(handle_pvf_check(rpc_url, skip, at_block))?;
         }
         Commands::PvfPrepareWorker(params) => {
             polkadot_node_core_pvf_worker::prepare_worker_entrypoint(
