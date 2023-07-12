@@ -1,6 +1,6 @@
 [package]
 name = "pvf-checker"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
@@ -12,8 +12,8 @@ tokio = { version = "1", features = ["full", "rt-multi-thread"] }
 
 parity-scale-codec = "3.1.5" # required by subxt
 
-polkadot-node-core-pvf = { git = "https://github.com/paritytech/polkadot", branch = "master" }
-polkadot-node-core-pvf-prepare-worker = { git = "https://github.com/paritytech/polkadot", branch = "master" }
-polkadot-parachain = { git = "https://github.com/paritytech/polkadot", branch = "master" }
+polkadot-node-core-pvf = { git = "https://github.com/paritytech/polkadot", branch = "release-v1.0.0" }
+polkadot-node-core-pvf-prepare-worker = { git = "https://github.com/paritytech/polkadot", branch = "release-v1.0.0" }
+polkadot-parachain = { git = "https://github.com/paritytech/polkadot", branch = "release-v1.0.0" }
 
-sp-maybe-compressed-blob = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-maybe-compressed-blob = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v1.0.0" }
