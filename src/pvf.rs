@@ -1,6 +1,6 @@
 use anyhow::anyhow;
 use futures::channel::oneshot;
-use polkadot_node_core_pvf::{Config, PvfPrepData, ValidationHost};
+use polkadot_node_core_pvf::{Config, PvfPrepData, ValidationHost, PrepareJobKind};
 use polkadot_parachain::primitives::ValidationCode;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
@@ -35,6 +35,7 @@ pub async fn precheck_pvf(
         // FIXME: support non-default ExecutorParams
         Default::default(),
         Duration::from_secs(60),
+        PrepareJobKind::Prechecking,
     );
 
     let (tx, rx) = oneshot::channel();
