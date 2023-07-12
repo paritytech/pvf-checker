@@ -105,7 +105,7 @@ fn main() -> anyhow::Result<()> {
             rt.block_on(handle_pvf_check(rpc_url, skip, at_block))?;
         }
         Commands::PvfPrepareWorker(params) => {
-            polkadot_node_core_pvf_worker::prepare_worker_entrypoint(
+            polkadot_node_core_pvf_prepare_worker::prepare_worker_entrypoint(
                 &params.socket_path,
                 Some(&params.node_impl_version),
             );
