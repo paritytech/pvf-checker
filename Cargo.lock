@@ -4532,7 +4532,7 @@ checksum = "e3d7ddaed09e0eb771a79ab0fd64609ba0afb0a8366421957936ad14cbd13630"
 [[package]]
 name = "polkadot-core-primitives"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "parity-scale-codec",
  "scale-info",
@@ -4544,7 +4544,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-core-pvf"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "always-assert",
  "futures",
@@ -4575,7 +4575,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-core-pvf-common"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "cpu-time",
  "futures",
@@ -4599,7 +4599,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-core-pvf-execute-worker"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "cpu-time",
  "futures",
@@ -4619,7 +4619,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-core-pvf-prepare-worker"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "futures",
  "libc",
@@ -4642,7 +4642,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-jaeger"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "lazy_static",
  "log",
@@ -4660,7 +4660,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-metrics"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "bs58",
  "futures",
@@ -4679,7 +4679,7 @@ dependencies = [
 [[package]]
 name = "polkadot-node-primitives"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "bounded-vec",
  "futures",
@@ -4701,7 +4701,7 @@ dependencies = [
 [[package]]
 name = "polkadot-parachain"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "bounded-collections",
  "derive_more",
@@ -4718,7 +4718,7 @@ dependencies = [
 [[package]]
 name = "polkadot-primitives"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "bitvec",
  "hex-literal",
@@ -5040,9 +5040,11 @@ dependencies = [
  "futures",
  "parity-scale-codec",
  "polkadot-node-core-pvf",
+ "polkadot-node-core-pvf-common",
  "polkadot-node-core-pvf-prepare-worker",
  "polkadot-parachain",
  "sp-maybe-compressed-blob",
+ "sp-tracing 10.0.0 (git+https://github.com/paritytech/substrate?branch=master)",
  "subxt",
  "tokio",
 ]
@@ -8472,7 +8474,7 @@ dependencies = [
 [[package]]
 name = "tracing-gum"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "polkadot-node-jaeger",
  "polkadot-primitives",
@@ -8483,7 +8485,7 @@ dependencies = [
 [[package]]
 name = "tracing-gum-proc-macro"
 version = "0.9.43"
-source = "git+https://github.com/paritytech/polkadot?branch=master#e13d10c8e834eaee55ac97956f67263880ec635c"
+source = "git+https://github.com/paritytech/polkadot?branch=mrcnski/pvf-split-out-worker-binaries#6ef14fed789c7cd7cf3f01cbfdfbd07acd631109"
 dependencies = [
  "expander",
  "proc-macro-crate",

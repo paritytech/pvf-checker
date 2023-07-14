@@ -3,6 +3,14 @@ name = "pvf-checker"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "pvf-checker"
+path = "src/main.rs"
+
+[[bin]]
+name = "prechecker-worker"
+path = "src/prepare_worker.rs"
+
 [dependencies]
 anyhow = "1.0.53"
 clap = { version = "4.2.7", features = ["derive"] }
@@ -13,7 +21,10 @@ tokio = { version = "1", features = ["full", "rt-multi-thread"] }
 parity-scale-codec = "3.1.5" # required by subxt
 
 polkadot-node-core-pvf = { git = "https://github.com/paritytech/polkadot", branch = "mrcnski/pvf-split-out-worker-binaries" }
+polkadot-node-core-pvf-common = { git = "https://github.com/paritytech/polkadot", branch = "mrcnski/pvf-split-out-worker-binaries" }
 polkadot-node-core-pvf-prepare-worker = { git = "https://github.com/paritytech/polkadot", branch = "mrcnski/pvf-split-out-worker-binaries" }
 polkadot-parachain = { git = "https://github.com/paritytech/polkadot", branch = "mrcnski/pvf-split-out-worker-binaries" }
 
 sp-maybe-compressed-blob = { git = "https://github.com/paritytech/substrate", branch = "master" }
+# required by decl_worker_main! macro
+sp-tracing = { git = "https://github.com/paritytech/substrate", branch = "master" }

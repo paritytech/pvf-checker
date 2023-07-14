@@ -76,7 +76,7 @@ async fn handle_pvf_check(
     let pvfs = subxt::fetch_parachain_pvfs(rpc_url, at_block).await?;
     println!(" SUCCESS ({} PVFs)", pvfs.len());
 
-    let validation_host = pvf::setup_pvf_worker(pvfs_path).await;
+    let validation_host = pvf::setup_pvf_worker(pvfs_path).await?;
 
     for (para_id, pvf) in pvfs {
         if skip.binary_search(&u32::from(para_id)).is_ok() {

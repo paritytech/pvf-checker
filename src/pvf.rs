@@ -1,15 +1,38 @@
 use anyhow::anyhow;
 use futures::channel::oneshot;
-use polkadot_node_core_pvf::{Config, PvfPrepData, ValidationHost, PrepareJobKind};
+use polkadot_node_core_pvf::{Config, PrepareJobKind, PvfPrepData, ValidationHost};
 use polkadot_parachain::primitives::ValidationCode;
 use std::path::PathBuf;
+use std::process::Command;
 use std::time::{Duration, Instant};
 
-pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> ValidationHost {
-    let program_path = std::env::current_exe().expect("current_exe failed?");
+pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> anyhow::Result<ValidationHost> {
+    let prepare_worker_path = {
+        // assuming they are both in ./target/release or at least in the same directory
+        let mut path = std::env::current_exe().expect("current_exe failed?");
+        path.pop();
+        path.push("prechecker-worker");
+        path
+    };
+
+    let prep_worker_version = Command::new(&prepare_worker_path)
+        .args(["--version"])
+        .output()?
+        .stdout;
+
+    let prep_worker_version = std::str::from_utf8(&prep_worker_version)
+        .expect("version is printed as a string; qed")
+        .trim()
+        .to_string();
+
+    println!("Prechecker worker version: {}", prep_worker_version);
+
+    let executor_worker_path = PathBuf::from("/dev/null");
     // FIXME: support non-default ExecutorParams
-    let (validation_host, worker) =
-        polkadot_node_core_pvf::start(Config::new(pvfs_path, program_path), Default::default());
+    let (validation_host, worker) = polkadot_node_core_pvf::start(
+        Config::new(pvfs_path, prepare_worker_path, executor_worker_path),
+        Default::default(),
+    );
 
     // CURSED
     let _detached_thread = std::thread::spawn(move || {
@@ -20,7 +43,7 @@ pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> ValidationHost {
         rt.block_on(worker);
     });
 
-    validation_host
+    Ok(validation_host)
 }
 
 pub async fn precheck_pvf(
