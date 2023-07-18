@@ -1,6 +1,6 @@
 use anyhow::anyhow;
 use futures::channel::oneshot;
-use polkadot_node_core_pvf::{Config, PvfPrepData, ValidationHost, PrepareJobKind};
+use polkadot_node_core_pvf::{Config, PrepareJobKind, PvfPrepData, ValidationHost};
 use polkadot_parachain::primitives::ValidationCode;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
