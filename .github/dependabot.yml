@@ -3,6 +3,9 @@ updates:
   - package-ecosystem: "cargo"
     directory: "/"
     labels: []
+    ignore:
+      - dependency-name: "polkadot-*"
+      - dependency-name: "sp-*"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 3
