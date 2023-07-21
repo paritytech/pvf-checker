@@ -15,5 +15,6 @@ parity-scale-codec = "3.1.5" # required by subxt
 polkadot-node-core-pvf = { git = "https://github.com/paritytech/polkadot", branch = "master" }
 polkadot-node-core-pvf-prepare-worker = { git = "https://github.com/paritytech/polkadot", branch = "master" }
 polkadot-parachain = { git = "https://github.com/paritytech/polkadot", branch = "master" }
+polkadot-primitives = { git = "https://github.com/paritytech/polkadot", branch = "master" }
 
 sp-maybe-compressed-blob = { git = "https://github.com/paritytech/substrate", branch = "master" }
