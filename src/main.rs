@@ -73,18 +73,24 @@ async fn handle_pvf_check(
     let _ = std::fs::create_dir_all(&pvfs_path);
 
     print!("Fetching parachain PVFs...");
-    let pvfs = subxt::fetch_parachain_pvfs(rpc_url, at_block).await?;
+    let (pvfs, executor_params) = subxt::fetch_on_chain_data(rpc_url, at_block).await?;
     println!(" SUCCESS ({} PVFs)", pvfs.len());
+    if executor_params == Default::default() {
+        println!("Using default ExecutorParams");
+    } else {
+        println!("Using ExecutorParams: {executor_params:?}");
+    }
 
     let validation_host = pvf::setup_pvf_worker(pvfs_path).await;
 
     for (para_id, pvf) in pvfs {
         if skip.binary_search(&u32::from(para_id)).is_ok() {
-            println!("Skipping {:?}:", &para_id);
+            println!("Skipping {:?}", &para_id);
             continue;
         }
         print!("Pre-checking {:?}:", &para_id);
-        let duration = pvf::precheck_pvf(validation_host.clone(), pvf).await?;
+        let duration =
+            pvf::precheck_pvf(validation_host.clone(), pvf, executor_params.clone()).await?;
         println!(" SUCCESS ({}ms)", duration.as_millis());
     }
 

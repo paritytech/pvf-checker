@@ -2,12 +2,12 @@ use anyhow::anyhow;
 use futures::channel::oneshot;
 use polkadot_node_core_pvf::{Config, PrepareJobKind, PvfPrepData, ValidationHost};
 use polkadot_parachain::primitives::ValidationCode;
+use polkadot_primitives::ExecutorParams;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> ValidationHost {
     let program_path = std::env::current_exe().expect("current_exe failed?");
-    // FIXME: support non-default ExecutorParams
     let (validation_host, worker) =
         polkadot_node_core_pvf::start(Config::new(pvfs_path, program_path), Default::default());
 
@@ -26,14 +26,14 @@ pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> ValidationHost {
 pub async fn precheck_pvf(
     mut validation_host: ValidationHost,
     pvf: ValidationCode,
+    executor_params: ExecutorParams,
 ) -> anyhow::Result<Duration> {
     let raw_validation_code =
         sp_maybe_compressed_blob::decompress(&pvf.0, 12 * 1024 * 1024)?.to_vec();
 
     let pvf = PvfPrepData::from_code(
         raw_validation_code,
-        // FIXME: support non-default ExecutorParams
-        Default::default(),
+        executor_params,
         Duration::from_secs(60),
         PrepareJobKind::Prechecking,
     );
