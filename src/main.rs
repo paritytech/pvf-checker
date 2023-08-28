@@ -81,7 +81,7 @@ async fn handle_pvf_check(
         println!("Using ExecutorParams: {executor_params:?}");
     }
 
-    let validation_host = pvf::setup_pvf_worker(pvfs_path).await;
+    let validation_host = pvf::setup_pvf_worker(pvfs_path).await?;
 
     for (para_id, pvf) in pvfs {
         if skip.binary_search(&u32::from(para_id)).is_ok() {
@@ -114,6 +114,7 @@ fn main() -> anyhow::Result<()> {
             polkadot_node_core_pvf_prepare_worker::worker_entrypoint(
                 &params.socket_path,
                 Some(&params.node_impl_version),
+                Some(pvf::NODE_VERSION),
             );
         }
         Commands::PvfExecuteWorker(_params) => {
