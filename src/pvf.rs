@@ -32,7 +32,12 @@ pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> anyhow::Result<ValidationHo
 
     let executor_worker_path = PathBuf::from("/dev/null");
     let (validation_host, worker) = polkadot_node_core_pvf::start(
-        Config::new(pvfs_path, Some(NODE_VERSION.to_owned()), prepare_worker_path, executor_worker_path),
+        Config::new(
+            pvfs_path,
+            Some(NODE_VERSION.to_owned()),
+            prepare_worker_path,
+            executor_worker_path,
+        ),
         Default::default(),
     );
 
