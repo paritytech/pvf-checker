@@ -7,6 +7,8 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::time::{Duration, Instant};
 
+pub const NODE_VERSION: &'static str = env!("SUBSTRATE_CLI_IMPL_VERSION");
+
 pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> anyhow::Result<ValidationHost> {
     let prepare_worker_path = {
         // assuming they are both in ./target/release or at least in the same directory
@@ -29,9 +31,8 @@ pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> anyhow::Result<ValidationHo
     println!("Prechecker worker version: {}", prep_worker_version);
 
     let executor_worker_path = PathBuf::from("/dev/null");
-    // FIXME: support non-default ExecutorParams
     let (validation_host, worker) = polkadot_node_core_pvf::start(
-        Config::new(pvfs_path, prepare_worker_path, executor_worker_path),
+        Config::new(pvfs_path, Some(NODE_VERSION.to_owned()), prepare_worker_path, executor_worker_path),
         Default::default(),
     );
 

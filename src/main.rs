@@ -114,6 +114,7 @@ fn main() -> anyhow::Result<()> {
             polkadot_node_core_pvf_prepare_worker::worker_entrypoint(
                 &params.socket_path,
                 Some(&params.node_impl_version),
+                Some(pvf::NODE_VERSION),
             );
         }
         Commands::PvfExecuteWorker(_params) => {
