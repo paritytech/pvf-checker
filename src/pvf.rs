@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use futures::channel::oneshot;
 use polkadot_node_core_pvf::{Config, PrepareJobKind, PvfPrepData, ValidationHost};
-use polkadot_parachain::primitives::ValidationCode;
+use polkadot_parachain_primitives::primitives::ValidationCode;
 use polkadot_primitives::ExecutorParams;
 use std::path::PathBuf;
 use std::process::Command;
@@ -20,7 +20,14 @@ pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> anyhow::Result<ValidationHo
 
     let prep_worker_version = Command::new(&prepare_worker_path)
         .args(["--version"])
-        .output()?
+        .output()
+        .map_err(|err| {
+            anyhow!(
+                "Error executing prepare worker at '{:?}': {}",
+                prepare_worker_path,
+                err
+            )
+        })?
         .stdout;
 
     let prep_worker_version = std::str::from_utf8(&prep_worker_version)
@@ -39,7 +46,8 @@ pub async fn setup_pvf_worker(pvfs_path: PathBuf) -> anyhow::Result<ValidationHo
             executor_worker_path,
         ),
         Default::default(),
-    );
+    )
+    .await?;
 
     // CURSED
     let _detached_thread = std::thread::spawn(move || {

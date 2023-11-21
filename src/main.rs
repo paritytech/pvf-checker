@@ -39,15 +39,6 @@ enum Commands {
         #[clap(long)]
         at_block: Option<H256>,
     },
-
-    // These are needed for pvf workers:
-    #[allow(missing_docs)]
-    #[clap(name = "prepare-worker", hide = true)]
-    PvfPrepareWorker(ValidationWorkerCommand),
-
-    #[allow(missing_docs)]
-    #[clap(name = "execute-worker", hide = true)]
-    PvfExecuteWorker(ValidationWorkerCommand),
 }
 
 #[allow(missing_docs)]
@@ -56,6 +47,9 @@ pub struct ValidationWorkerCommand {
     /// The path to the validation host's socket.
     #[arg(long)]
     pub socket_path: String,
+    /// The path to the worker-specific temporary directory.
+    #[arg(long)]
+    pub worker_dir_path: String,
     /// Calling node implementation version
     #[arg(long)]
     pub node_impl_version: String,
@@ -81,6 +75,7 @@ async fn handle_pvf_check(
         println!("Using ExecutorParams: {executor_params:?}");
     }
 
+    println!("Setting up PVF worker...");
     let validation_host = pvf::setup_pvf_worker(pvfs_path).await?;
 
     for (para_id, pvf) in pvfs {
@@ -109,16 +104,6 @@ fn main() -> anyhow::Result<()> {
         } => {
             skip.sort();
             rt.block_on(handle_pvf_check(rpc_url, skip, at_block))?;
-        }
-        Commands::PvfPrepareWorker(params) => {
-            polkadot_node_core_pvf_prepare_worker::worker_entrypoint(
-                &params.socket_path,
-                Some(&params.node_impl_version),
-                Some(pvf::NODE_VERSION),
-            );
-        }
-        Commands::PvfExecuteWorker(_params) => {
-            unimplemented!("not needed for pre-checking")
         }
     }
 
