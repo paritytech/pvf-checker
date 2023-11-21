@@ -1,7 +1,7 @@
 use ::subxt::{storage::Storage, utils::H256, OnlineClient, PolkadotConfig};
 use anyhow::anyhow;
 use parity_scale_codec::{Decode, Encode};
-use polkadot_parachain::primitives::{Id as ParaId, ValidationCode};
+use polkadot_parachain_primitives::primitives::{Id as ParaId, ValidationCode};
 use polkadot_primitives::ExecutorParams;
 
 #[subxt::subxt(runtime_metadata_path = "assets/kusama_metadata.scale")]

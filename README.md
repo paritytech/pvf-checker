@@ -11,6 +11,7 @@ This tool uses [`subxt`](https://github.com/paritytech/subxt) to connect to an R
 ### Example
 
 ```bash
+cargo build --release
 cargo run --release -- pvf-check --rpc-url 'wss://kusama-rpc.polkadot.io:443' --skip 2268 --at-block 0x9bdc8043c83217b5646d2db9ad17a7fc919e8d5b788b11c555f8099be7baedf2
 ```
 
